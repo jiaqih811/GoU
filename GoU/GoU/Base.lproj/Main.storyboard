@@ -652,7 +652,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gua-9R-MTj" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Browse" image="car" id="DOU-Nt-sg4">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="-50" vertical="0.0"/>
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="w2w-Zf-8ST">
@@ -754,7 +754,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="sDd-I8-QrY" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="-3" title="Profile" image="Profile" id="cPa-gy-q4n">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="50" vertical="0.0"/>
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="nfl-Ab-cfr">
@@ -774,7 +774,7 @@
         <scene sceneID="iZm-7b-ouc">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kZj-AM-JIO" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="My Trips" selectedImage="list" id="sP9-BH-7SA"/>
+                    <tabBarItem key="tabBarItem" title="My Trips" image="list" selectedImage="list" id="sP9-BH-7SA"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="rq5-kR-zgY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
