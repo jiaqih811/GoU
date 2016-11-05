@@ -107,7 +107,7 @@ class TripViewController: UIViewController {
             
             let alert = UIAlertController(title: "Thank You",
                                           message: "Create sucessfully", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Awesome", style: .default, handler: nil)
+            let action = UIAlertAction(title: "Awesome", style: .default, handler: {(alert: UIAlertAction!) in self.showNextView()})
             alert.addAction(action)
             present(alert, animated: true, completion: nil)
             
@@ -122,6 +122,14 @@ class TripViewController: UIViewController {
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
+    }
+    
+    func showNextView()
+    {
+        //let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "MyTripsTableViewController") as! MyTripsTableViewController
+        //self.present(next, animated: true, completion: nil)
+        //self.navigationController?.pushViewController(nextVC, animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
 }

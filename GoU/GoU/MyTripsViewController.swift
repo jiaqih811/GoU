@@ -140,6 +140,7 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
             
             
             cell.detailTextLabel?.text = "\(requesters.count) Requesters"
+            
             if (requesters.count <= 1){
                 cell.detailTextLabel?.text = "\(requesters.count) Requester"
             }
