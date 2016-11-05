@@ -62,6 +62,8 @@ var viewingCondition = 0
 //1 : view trip detail from myTrips->posts
 //2 : view trip detail from myTrips->requests
 
+var myTripsBadgeCount = 0
+
 
 var trips = [Trip]()
 var myTrips = [Trip]()

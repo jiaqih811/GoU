@@ -72,9 +72,35 @@ class DriverProfileViewController: UIViewController {
 
         self.ref.child("posts").child(tripViewing.tripID).child("riderID").setValue(driverInfo.userID)
         
-
         
         
+        showAlert()
+        
+        
+        
+        
+        //let nextVC = MyTripsTableViewController()
+        //self.present(nextVC, animated: true, completion: nil)
+        
+        
+        
+    }
+    
+    func showAlert() {
+        let alert = UIAlertController(title: "Success",
+                                      message: "Rider matched!", preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: {(alert: UIAlertAction!) in self.showNextView()})
+        alert.addAction(action)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func showNextView()
+    {
+        //let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "MyTripsTableViewController") as! MyTripsTableViewController
+        //self.present(next, animated: true, completion: nil)
+        //self.navigationController?.pushViewController(nextVC, animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
 
     /*

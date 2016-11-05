@@ -117,7 +117,16 @@ class RequestersTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requesterItem", for: indexPath)
         
 
-        cell.textLabel?.text = "\(requesters[indexPath.row].name) Click to see profile"
+        cell.textLabel?.text = "\(requesters[indexPath.row].name) "
+        
+//        cell.detailTextLabel?.text = "0 Requester"
+//        
+//        if (requesters[indexPath.row].userID == tripViewing.riderID){
+//        }
+//        
+        
+        
+
         
         
         return cell
