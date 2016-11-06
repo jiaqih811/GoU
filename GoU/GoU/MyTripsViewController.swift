@@ -190,6 +190,11 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         self.tripsTableView.reloadData()
     }
     
+    
+    
+    @IBAction func refresh(_ sender: AnyObject) {
+        self.tripsTableView.reloadData()
+    }
 
     /*
     // MARK: - Navigation
