@@ -29,13 +29,16 @@ class SignInViewController: UIViewController {
         if let user = FIRAuth.auth()?.currentUser {
             self.signedIn(user)
         }
+        self.hideKeyboardWhenTappedAround()
     }
     
     @IBAction func didTapSignIn(_ sender: AnyObject) {
         print(emailField.text)
         print(passwordField.text)
         // Sign In with credentials.
+        
         guard let email = emailField.text, let password = passwordField.text else { return }
+        
         FIRAuth.auth()?.signIn(withEmail: email, password: password) { (user, error) in
             if let error = error {
                 self.showAlert(message: error.localizedDescription)
@@ -47,8 +50,24 @@ class SignInViewController: UIViewController {
         }
     }
     
+    func isValidEmail(testStr:String) -> Bool {
+        // print("validate calendar: \(testStr)")
+       // let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@umich.edu"
+        
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluate(with: testStr)
+    }
+    
     @IBAction func didTapSignUp(_ sender: AnyObject) {
         guard let email = emailField.text, let password = passwordField.text else { return }
+        
+        // check the email ends with umich.edu
+        if(!isValidEmail(testStr: emailField.text!)) {
+            self.showAlert(message: "Please use your umich email address")
+            return
+        }
+        
         FIRAuth.auth()?.createUser(withEmail: email, password: password) { (user, error) in
             if let error = error {
                 self.showAlert(message: error.localizedDescription)
