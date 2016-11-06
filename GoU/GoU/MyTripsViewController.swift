@@ -136,23 +136,25 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         
         if (mySegment.selectedSegmentIndex == 0){
             //My posts
-            cell.textLabel?.text = "From \(myTrips[indexPath.row].from) To \(myTrips[indexPath.row].to) on \(myTrips[indexPath.row].date)"
+            cell.textLabel?.text = "\(myTrips[indexPath.row].from)-\(myTrips[indexPath.row].to),\(myTrips[indexPath.row].date)"
             
             
             cell.detailTextLabel?.text = "\(requesters.count) Requesters"
             
-            if (requesters.count <= 1){
-                cell.detailTextLabel?.text = "\(requesters.count) Requester"
-            }
+            cell.detailTextLabel?.text = "View Requesters"
             
-            if(myTrips[indexPath.row].riderID != ""){
-                cell.detailTextLabel?.text = "Matched"
-            }
+//            if (requesters.count <= 1){
+//                cell.detailTextLabel?.text = "\(requesters.count) Requester"
+//            }
+//            
+//            if(myTrips[indexPath.row].riderID != ""){
+//                cell.detailTextLabel?.text = "Matched"
+//            }
             
         }
         if (mySegment.selectedSegmentIndex == 1){
             //My requests
-            cell.textLabel?.text = "From \(myRequests[indexPath.row].from) To \(myRequests[indexPath.row].to) on \(myRequests[indexPath.row].date)"
+            cell.textLabel?.text = "\(myRequests[indexPath.row].from)-\(myRequests[indexPath.row].to),\(myRequests[indexPath.row].date)"
             
             //TO DO
             cell.detailTextLabel?.text = "Unaccepted"
