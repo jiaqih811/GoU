@@ -60,6 +60,7 @@ class DriverProfileViewController: UIViewController {
             + "Location " + driverInfo.loc + "\n"
             + "Email Address: " + driverInfo.email + "\n"
             + "Phone Number: " + driverInfo.phone + "\n"
+            + "About Me: " + driverInfo.aboutme + "\n"
         self.view.setNeedsDisplay()
     }
 
