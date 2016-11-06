@@ -18,6 +18,9 @@ class RequestersTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // hide keyboard
+        self.hideKeyboardWhenTappedAround()
+        
         self.ref = FIRDatabase.database().reference(withPath: "messages")
         self.userRef = FIRDatabase.database().reference(withPath: "commonProfiles")
         

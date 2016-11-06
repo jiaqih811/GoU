@@ -39,6 +39,10 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // hide keyboard
+        self.hideKeyboardWhenTappedAround()
+        
         // make the view scrollable
         scrollView = UIScrollView(frame: view.bounds)
         //var cellViewFrame: UIView?

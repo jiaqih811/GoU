@@ -15,7 +15,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "102"
             endingLineNumber = "102"
-            landmarkName = "signedIn(_:)"
+            landmarkName = "sendMessage(withData:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

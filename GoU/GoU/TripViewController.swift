@@ -32,6 +32,9 @@ class TripViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // hide keyboard
+        self.hideKeyboardWhenTappedAround()
+        
         self.ref = FIRDatabase.database().reference(withPath: "messages")
         // Do any additional setup after loading the view, typically from a nib.
         
