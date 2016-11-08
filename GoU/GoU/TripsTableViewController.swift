@@ -94,7 +94,7 @@ class TripsTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TripItem", for: indexPath)
         
-        cell.textLabel?.text = "From \(trips[indexPath.row].from) To \(trips[indexPath.row].to) on \(trips[indexPath.row].date)"
+        cell.textLabel?.text = "\(trips[indexPath.row].from) - \(trips[indexPath.row].to) - \(trips[indexPath.row].date)"
         
         return cell
     }

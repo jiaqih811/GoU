@@ -136,12 +136,16 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         
         if (mySegment.selectedSegmentIndex == 0){
             //My posts
-            cell.textLabel?.text = "\(myTrips[indexPath.row].from)-\(myTrips[indexPath.row].to),\(myTrips[indexPath.row].date)"
+            cell.textLabel?.text = "\(myTrips[indexPath.row].from) - \(myTrips[indexPath.row].to) - \(myTrips[indexPath.row].date)"
             
             
             cell.detailTextLabel?.text = "\(requesters.count) Requesters"
             
             cell.detailTextLabel?.text = "View Requesters"
+            
+            if(myRequests[indexPath.row].riderID != ""){
+                cell.detailTextLabel?.text = "Matched"
+            }
             
 //            if (requesters.count <= 1){
 //                cell.detailTextLabel?.text = "\(requesters.count) Requester"
@@ -154,12 +158,15 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         }
         if (mySegment.selectedSegmentIndex == 1){
             //My requests
-            cell.textLabel?.text = "\(myRequests[indexPath.row].from)-\(myRequests[indexPath.row].to),\(myRequests[indexPath.row].date)"
+            cell.textLabel?.text = "\(myRequests[indexPath.row].from) - \(myRequests[indexPath.row].to) - \(myRequests[indexPath.row].date)"
             
             //TO DO
-            cell.detailTextLabel?.text = "Unaccepted"
+            cell.detailTextLabel?.text = "No response"
             if(myRequests[indexPath.row].riderID == userID){
                 cell.detailTextLabel?.text = "Accepted"
+            }
+            if(myRequests[indexPath.row].riderID != "" && myRequests[indexPath.row].riderID != userID){
+                cell.detailTextLabel?.text = "Failed"
             }
         }
         

@@ -19,6 +19,11 @@ class TripViewController: UIViewController {
     @IBOutlet weak var pickTextField: UITextField!
     @IBOutlet weak var priceTextField: UITextField!
     
+    
+    @IBOutlet weak var scrollView: UIScrollView!
+    
+    
+    
     var ref: FIRDatabaseReference!
     var rootRef: FIRDatabaseReference!
     var posts: [FIRDataSnapshot]! = []
@@ -31,6 +36,8 @@ class TripViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        scrollView = UIScrollView(frame: view.bounds)
         
         // hide keyboard
         self.hideKeyboardWhenTappedAround()

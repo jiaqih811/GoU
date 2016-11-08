@@ -207,12 +207,21 @@ class TripDetailViewController: UIViewController {
         
         let alert = UIAlertController(title: "Thank You",
                                       message: "Send request to driver sucessfully!", preferredStyle: .alert)
-        let action = UIAlertAction(title: "Awesome", style: .default, handler: nil)
+        let action = UIAlertAction(title: "Awesome", style: .default, handler: {(alert: UIAlertAction!) in self.showNextView()})
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
         
         //TO DO: send the request to driver
     }
+    
+    func showNextView()
+    {
+        //let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "MyTripsTableViewController") as! MyTripsTableViewController
+        //self.present(next, animated: true, completion: nil)
+        //self.navigationController?.pushViewController(nextVC, animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+
     
     @IBAction func viewRequesters(_ sender: AnyObject) {
         self.ref = FIRDatabase.database().reference(withPath: "messages")

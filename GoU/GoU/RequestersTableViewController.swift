@@ -122,6 +122,8 @@ class RequestersTableViewController: UITableViewController {
 
         cell.textLabel?.text = "\(requesters[indexPath.row].name) "
         
+        cell.detailTextLabel?.text = "View Profile"
+        
 //        cell.detailTextLabel?.text = "0 Requester"
 //        
 //        if (requesters[indexPath.row].userID == tripViewing.riderID){
