@@ -143,10 +143,10 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
             
             cell.detailTextLabel?.text = "View Requesters"
             
-            if(myRequests[indexPath.row].riderID != ""){
-                cell.detailTextLabel?.text = "Matched"
-            }
-            
+//            if(myRequests[indexPath.row].riderID != ""){
+//                cell.detailTextLabel?.text = "Matched"
+//            }
+//            
 //            if (requesters.count <= 1){
 //                cell.detailTextLabel?.text = "\(requesters.count) Requester"
 //            }
