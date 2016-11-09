@@ -11,7 +11,7 @@ import UIKit
 
 import Firebase
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     @IBOutlet weak var firstnameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var genderTextField: UITextField!
@@ -27,6 +27,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var languageSecondTextField: UITextField!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var genderPicker: UIPickerView!
     // MARK: Properties
     var ref: FIRDatabaseReference!
     var messages: [FIRDataSnapshot]! = []
@@ -37,6 +38,8 @@ class ProfileViewController: UIViewController {
     var remoteConfig: FIRRemoteConfig!
     var uid: String = ""
     
+    var genderOptions = ["Female", "Male", "Other"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,11 +48,7 @@ class ProfileViewController: UIViewController {
         
         // make the view scrollable
         scrollView = UIScrollView(frame: view.bounds)
-        //var cellViewFrame: UIView?
-        //cellViewFrame = UIView(frame: CGRect( x: 0.0, y: 0.0, width: self.view.frame.width, height: self.view.frame.height + 120))
-        //scrollView.contentSize = (cellViewFrame?.bounds.size)!
-        
-        // Do any additional setup after loading the view, typically from a nib.
+
         configureDatabase()
         configureStorage()
         configureRemoteConfig()
@@ -90,6 +89,13 @@ class ProfileViewController: UIViewController {
         }) { (error) in
             print(error.localizedDescription)
         }
+        
+        //picker
+        var genderPickerView = UIPickerView()
+        
+        genderPickerView.delegate = self
+        
+        genderTextField.inputView = genderPickerView
     }
     
     override func didReceiveMemoryWarning() {
@@ -202,6 +208,31 @@ class ProfileViewController: UIViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
+    
+    //MARK: picker
+    // returns the number of 'columns' to display.
+    func numberOfComponents(in pickerView: UIPickerView) -> Int{
+        return 1
+    }
+    
+    // returns the # of rows in each component..
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int{
+        return genderOptions.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return genderOptions[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        genderTextField.text = genderOptions[row]
+    }
+    
+//    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+//        genderPicker.isHidden = false
+//        return false
+//    }
+    
     
 }
 
