@@ -14,6 +14,8 @@ class RequestersTableViewController: UITableViewController {
     var ref: FIRDatabaseReference!
     var userRef: FIRDatabaseReference!
     var tripRequests = ""
+    var requesters = [DriverViewProfile]()
+    var trip = Trip()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,45 +27,37 @@ class RequestersTableViewController: UITableViewController {
         self.userRef = FIRDatabase.database().reference(withPath: "commonProfiles")
         
         
-        
-        
-        
-        let tripID = tripViewing.tripID
         self.userRef.observe(.value, with: { (snapshot) in
-            requesters = []
+            self.requesters = []
             
-            let key  = snapshot.key as String
             let value = snapshot.value as? NSDictionary
             let userKeys = value?.allKeys as! [String]
-            let temp = userKeys[0]
             debugPrint("hello")
-            debugPrint(key)
-            
             
             for currUser in userKeys{
+                var requester = DriverViewProfile()
                 let firstName = (value![currUser]! as! NSDictionary)["firstName"]! as! String
                 let lastName = (value![currUser]! as! NSDictionary)["lastName"]! as! String
-                driverInfo.gender = (value![currUser]! as! NSDictionary)["gender"]! as! String
+                requester.gender = (value![currUser]! as! NSDictionary)["gender"]! as! String
                 let city = (value![currUser]! as! NSDictionary)["currentCityName"]! as! String
                 let state = (value![currUser]! as! NSDictionary)["currentStateName"]! as! String
                 let country = (value![currUser]! as! NSDictionary)["currentCountryName"]! as! String
-                driverInfo.email = (value![currUser]! as! NSDictionary)["emailAddress"]! as! String
-                driverInfo.phone = (value![currUser]! as! NSDictionary)["phoneNumber"]! as! String
-                driverInfo.aboutme = (value![currUser]! as! NSDictionary)["aboutMe"]! as! String
-                driverInfo.userID = (value![currUser]! as! NSDictionary)["userId"]! as! String
+                requester.email = (value![currUser]! as! NSDictionary)["emailAddress"]! as! String
+                requester.phone = (value![currUser]! as! NSDictionary)["phoneNumber"]! as! String
+                requester.aboutme = (value![currUser]! as! NSDictionary)["aboutMe"]! as! String
+                requester.userID = (value![currUser]! as! NSDictionary)["userId"]! as! String
                 self.tripRequests = (value![currUser]! as! NSDictionary)["myRequestsList"]! as! String
-
                 
-                driverInfo.name = firstName + " " + lastName
-                driverInfo.loc = city + ", " + state + ", " + country
-
+                
+                requester.name = firstName + " " + lastName
+                requester.loc = city + ", " + state + ", " + country
+                
                 let requestsArr = self.tripRequests.components(separatedBy: ",")
-                print(requestsArr)
-
+                
                 // TODO: DO linear search?
                 
-                if (requestsArr.contains(tripViewing.tripID)) {
-                    requesters.append(driverInfo)
+                if (requestsArr.contains(self.trip.tripID)) {
+                    self.requesters.append(requester)
                 }
                 
                 
@@ -80,7 +74,6 @@ class RequestersTableViewController: UITableViewController {
             print(error.localizedDescription)
         }
         
-        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -90,6 +83,23 @@ class RequestersTableViewController: UITableViewController {
         
         
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let indexPath = self.tableView.indexPathForSelectedRow
+        let temp = segue.identifier
+        print(temp)
+        if(segue.identifier == "Requesters2Profile") {
+            if let destination = segue.destination as? DriverProfileViewController {
+                
+                destination.myProfile = self.requesters[(indexPath?.row)!]
+                destination.driverFlag = false
+                destination.trip = self.trip
+                print(1)
+            }
+        }
+
+    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -107,7 +117,7 @@ class RequestersTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
         var numRows = 0
 
-        numRows = requesters.count
+        numRows = self.requesters.count
         print(numRows)
 
         return numRows
@@ -120,7 +130,7 @@ class RequestersTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requesterItem", for: indexPath)
         
 
-        cell.textLabel?.text = "\(requesters[indexPath.row].name) "
+        cell.textLabel?.text = "\(self.requesters[indexPath.row].name) "
         
         cell.detailTextLabel?.text = "View Profile"
         
@@ -138,12 +148,7 @@ class RequestersTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        //TO DO:
 
-        driverInfo = requesters[indexPath.row]
-        
-        NSLog(tripViewing.ownerID)
     }
     
     

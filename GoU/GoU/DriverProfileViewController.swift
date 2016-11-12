@@ -21,11 +21,14 @@ class DriverProfileViewController: UIViewController {
     var userRef: FIRDatabaseReference!
     var ref: FIRDatabaseReference!
 
+    var myProfile = DriverViewProfile()
+    var trip = Trip()
+    var driverFlag: Bool!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.setNeedsDisplay()
-        
         showInfo()
         
         acceptRequest.isHidden = true
@@ -33,7 +36,7 @@ class DriverProfileViewController: UIViewController {
         self.info.text = "Waiting......"
         
         
-        if(viewingCondition == 1 && tripViewing.riderID == ""){
+        if(!self.driverFlag && trip.riderID == ""){
             acceptRequest.isHidden = false
         }
         showInfo()
@@ -54,37 +57,24 @@ class DriverProfileViewController: UIViewController {
         
         self.info.text = "Waiting......"
         
-        let temp = driverInfo
-        self.info.text = "Driver Name: " + driverInfo.name + "\n"
-            + "Gender: " + driverInfo.gender + "\n"
-            + "Location " + driverInfo.loc + "\n"
-            + "Email Address: " + driverInfo.email + "\n"
-            + "Phone Number: " + driverInfo.phone + "\n"
-            + "About Me: " + driverInfo.aboutme + "\n"
+        self.info.text = "Driver Name: " + self.myProfile.name + "\n"
+            + "Gender: " + self.myProfile.gender + "\n"
+            + "Location " + self.myProfile.loc + "\n"
+            + "Email Address: " + self.myProfile.email + "\n"
+            + "Phone Number: " + self.myProfile.phone + "\n"
+            + "About Me: " + self.myProfile.aboutme + "\n"
         self.view.setNeedsDisplay()
     }
 
     
     @IBAction func acceptRequest(_ sender: AnyObject) {
         //TO DO: show alert
-        let temp1 = tripViewing.tripID
-        let temp2 = driverInfo.userID
         self.ref = FIRDatabase.database().reference(withPath: "messages")
 
-        self.ref.child("posts").child(tripViewing.tripID).child("riderID").setValue(driverInfo.userID)
-        
-        
+        self.ref.child("posts").child(self.trip.tripID).child("riderID").setValue(self.myProfile.userID)
         
         showAlert()
-        
-        
-        
-        
-        //let nextVC = MyTripsTableViewController()
-        //self.present(nextVC, animated: true, completion: nil)
-        
-        
-        
+
     }
     
     func showAlert() {
@@ -98,9 +88,6 @@ class DriverProfileViewController: UIViewController {
     
     func showNextView()
     {
-        //let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "MyTripsTableViewController") as! MyTripsTableViewController
-        //self.present(next, animated: true, completion: nil)
-        //self.navigationController?.pushViewController(nextVC, animated: true)
         self.navigationController?.popToRootViewController(animated: true)
     }
 

@@ -14,6 +14,8 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
     var ref: FIRDatabaseReference!
     var userRef: FIRDatabaseReference!
     var tripRequests = ""
+    var myPostTrips = [Trip]()
+    var myRequestTrips = [Trip]()
     
     @IBOutlet weak var mySegment: UISegmentedControl!
     
@@ -27,56 +29,48 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         self.ref = FIRDatabase.database().reference(withPath: "messages")
         self.userRef = FIRDatabase.database().reference(withPath: "commonProfiles")
         
-        
-        
-        
-        
         userID = (FIRAuth.auth()?.currentUser?.uid)!
         self.ref.child("posts").observe(.value, with: { (snapshot) in
-            myTrips = []
-            myRequests = []
+            self.myPostTrips = []
+            self.myRequestTrips = []
             
             let key  = snapshot.key as String
             let value = snapshot.value as? NSDictionary
-            let tripKeys = value?.allKeys as! [String]
-            let temp = tripKeys[0]
-            debugPrint("hello")
-            debugPrint(key)
+            if (value != nil) {
+                let tripKeys = value?.allKeys as! [String]
+                debugPrint("hello")
+                debugPrint(key)
             
             
-            for currTrip in tripKeys{
-                trip.from = (value![currTrip]! as! NSDictionary)["from"]! as! String
-                trip.to = (value![currTrip]! as! NSDictionary)["to"]! as! String
-                trip.date = (value![currTrip]! as! NSDictionary)["date"]! as! String
-                trip.seats = (value![currTrip]! as! NSDictionary)["seats"]! as! String
-                trip.notes = (value![currTrip]! as! NSDictionary)["notes"]! as! String
-                trip.tripID = currTrip
-                trip.ownerID = (value![currTrip]! as! NSDictionary)["ownerID"]! as! String
-                trip.price = (value![currTrip]! as! NSDictionary)["price"]! as! String
-                trip.pickUp = (value![currTrip]! as! NSDictionary)["pickUp"]! as! String
-                trip.riderID = (value![currTrip]! as! NSDictionary)["riderID"]! as! String
-                self.tripRequests = (value![currTrip]! as! NSDictionary)["requestList"]! as! String
+                for currTrip in tripKeys{
+                    var trip = Trip()
+                    trip.from = (value![currTrip]! as! NSDictionary)["from"]! as! String
+                    trip.to = (value![currTrip]! as! NSDictionary)["to"]! as! String
+                    trip.date = (value![currTrip]! as! NSDictionary)["date"]! as! String
+                    trip.seats = (value![currTrip]! as! NSDictionary)["seats"]! as! String
+                    trip.notes = (value![currTrip]! as! NSDictionary)["notes"]! as! String
+                    trip.tripID = currTrip
+                    trip.ownerID = (value![currTrip]! as! NSDictionary)["ownerID"]! as! String
+                    trip.price = (value![currTrip]! as! NSDictionary)["price"]! as! String
+                    trip.pickUp = (value![currTrip]! as! NSDictionary)["pickUp"]! as! String
+                    trip.riderID = (value![currTrip]! as! NSDictionary)["riderID"]! as! String
+                    self.tripRequests = (value![currTrip]! as! NSDictionary)["requestList"]! as! String
                 
-                let requestArr = self.tripRequests.components(separatedBy: ",")
-                print(requestArr)
+                    let requestArr = self.tripRequests.components(separatedBy: ",")
+                    print(requestArr)
                 
                 
-                debugPrint(trip.ownerID)
-                // TODO: DO linear search?
+                    debugPrint(trip.ownerID)
+                    // TODO: DO linear search?
                 
-                if (trip.ownerID == self.userID) {
-                    if (myTrips.isEmpty || myTrips[myTrips.endIndex - 1].tripID != trip.tripID) {
-                        myTrips.append(trip)
+                    if (trip.ownerID == self.userID) {
+                        self.myPostTrips.append(trip)
+                    }
+                
+                    if (requestArr.contains(self.userID)) {
+                        self.myRequestTrips.append(trip)
                     }
                 }
-                
-                if (requestArr.contains(self.userID)) {
-                    if (myRequests.isEmpty || myRequests[myRequests.endIndex - 1].tripID != trip.tripID) {
-                        myRequests.append(trip)
-                    }
-                }
-                
-                
             }
 
             self.tripsTableView.delegate = self
@@ -93,6 +87,35 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         //tabBarController?.tabBar.items?[2].badgeValue = "2"
 
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let indexPath = self.tripsTableView.indexPathForSelectedRow
+
+        
+        
+        
+        let temp = segue.identifier
+        print(temp)
+        if(segue.identifier == "MyTripsTable2TripDetail") {
+            if let destination = segue.destination as? TripDetailViewController {
+                
+                if (mySegment.selectedSegmentIndex == 0){
+                    //My posts
+                    destination.viewingCondition = 1
+                    destination.myTrip = self.myPostTrips[(indexPath?.row)!]
+                    
+                }
+                if (mySegment.selectedSegmentIndex == 1){
+                    //My requests
+                    destination.viewingCondition = 2
+                    destination.myTrip = self.myRequestTrips[(indexPath?.row)!]
+                    
+                }
+            }
+        }
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -111,7 +134,7 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         
         if (mySegment.selectedSegmentIndex == 0){
             //My posts
-            numRows = myTrips.count
+            numRows = self.myPostTrips.count
             print(numRows)
             
             
@@ -119,7 +142,7 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         if (mySegment.selectedSegmentIndex == 1){
             //My requests
             //TO DO
-            numRows = myRequests.count
+            numRows = self.myRequestTrips.count
             print(numRows)
         }
         
@@ -136,10 +159,10 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         
         if (mySegment.selectedSegmentIndex == 0){
             //My posts
-            cell.textLabel?.text = "\(myTrips[indexPath.row].from) - \(myTrips[indexPath.row].to) - \(myTrips[indexPath.row].date)"
+            cell.textLabel?.text = "\(self.myPostTrips[indexPath.row].from) - \(self.myPostTrips[indexPath.row].to) - \(self.myPostTrips[indexPath.row].date)"
             
             
-            cell.detailTextLabel?.text = "\(requesters.count) Requesters"
+//            cell.detailTextLabel?.text = "\(requesters.count) Requesters"
             
             cell.detailTextLabel?.text = "View Requesters"
             
@@ -158,14 +181,14 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         }
         if (mySegment.selectedSegmentIndex == 1){
             //My requests
-            cell.textLabel?.text = "\(myRequests[indexPath.row].from) - \(myRequests[indexPath.row].to) - \(myRequests[indexPath.row].date)"
+            cell.textLabel?.text = "\(self.myRequestTrips[indexPath.row].from) - \(self.myRequestTrips[indexPath.row].to) - \(self.myRequestTrips[indexPath.row].date)"
             
             //TO DO
             cell.detailTextLabel?.text = "No response"
-            if(myRequests[indexPath.row].riderID == userID){
+            if(self.myRequestTrips[indexPath.row].riderID == userID){
                 cell.detailTextLabel?.text = "Accepted"
             }
-            if(myRequests[indexPath.row].riderID != "" && myRequests[indexPath.row].riderID != userID){
+            if(self.myRequestTrips[indexPath.row].riderID != "" && self.myRequestTrips[indexPath.row].riderID != userID){
                 cell.detailTextLabel?.text = "Failed"
             }
         }
@@ -176,23 +199,7 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //TO DO:
-        
-        if (mySegment.selectedSegmentIndex == 0){
-            //My posts
-            viewingCondition = 1
-            tripViewing = myTrips[indexPath.row]
-            
-        }
-        if (mySegment.selectedSegmentIndex == 1){
-            //My requests
-            viewingCondition = 2
-            tripViewing = myRequests[indexPath.row]
-            
-        }
-        
-        NSLog(tripViewing.ownerID)
-    }
+     }
     
     
     @IBAction func switchView(_ sender: AnyObject) {

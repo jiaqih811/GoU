@@ -85,16 +85,6 @@ class TripViewController: UIViewController {
                                                              "riderID": ""
                 ])
             
-            self.ref.child("posts").observe(.childAdded, with: { (snapshot) in
-                let key  = snapshot.key as String
-                let value = snapshot.value as? NSDictionary
-                debugPrint("hello")
-                debugPrint(key)
-                
-            }) { (error) in
-                print(error.localizedDescription)
-            }
-            
             //chenhao's code
             //Note: I use the postKey here!!!
             self.rootRef = FIRDatabase.database().reference()
