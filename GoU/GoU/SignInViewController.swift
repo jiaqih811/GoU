@@ -47,6 +47,15 @@ class SignInViewController: UIViewController {
                 return
             }
             self.signedIn(user!)
+            if (!(FIRAuth.auth()?.currentUser?.isEmailVerified)!) {
+                self.showAlert(message: "Verify your email first!")
+                do {
+                    try FIRAuth.auth()?.signOut()
+                    AppState.sharedInstance.signedIn = false
+                } catch let signOutError as NSError {
+                    print ("Error signing out: \(signOutError.localizedDescription)")
+                }
+            }
         }
     }
     
@@ -68,26 +77,67 @@ class SignInViewController: UIViewController {
             return
         }
         
+        
         FIRAuth.auth()?.createUser(withEmail: email, password: password) { (user, error) in
             if let error = error {
                 self.showAlert(message: error.localizedDescription)
                 print(error.localizedDescription)
                 return
             }
-            self.setDisplayName(user!)
             
-            //create initial profile
-            self.uid = user!.uid
-            self.configureDatabase()
-            self.configureStorage()
-            var data = [Constants.CommonProfileFields.userId: user!.uid]
-            data[Constants.CommonProfileFields.saved] = "FALSE"
-            data[Constants.CommonProfileFields.myPostsList] = ""
-            data[Constants.CommonProfileFields.myRequestsList] = ""
-            self.sendMessage(withData: data)
+            //send email verification
+            self.sendEmailVerification(withCompletionCallback: { (error) in
+                if error != nil{
+                    print(error!)
+                }
+                else{
+                    //verification email sent
+                    self.showAlert(message: "We just sent a verification to your email address! Go and verify it!")
+                }
+            })
+            
+            
+            let prompt = UIAlertController.init(title: nil, message: "We just sent a verification to your email address! Go and verify it!", preferredStyle: .alert)
+            let okAction = UIAlertAction.init(title: "I have verified", style: .default) { (action) in
+                print (FIRAuth.auth()?.currentUser?.isEmailVerified)
+
+                    self.setDisplayName(user!)
+                    
+                    //create initial profile
+                    self.uid = user!.uid
+                    self.configureDatabase()
+                    self.configureStorage()
+                    var data = [Constants.CommonProfileFields.userId: user!.uid]
+                    data[Constants.CommonProfileFields.saved] = "FALSE"
+                    data[Constants.CommonProfileFields.myPostsList] = ""
+                    data[Constants.CommonProfileFields.myRequestsList] = ""
+                    self.sendMessage(withData: data)
+                if (FIRAuth.auth()?.currentUser?.isEmailVerified)! {
+                    // verified
+                } else {
+                    self.showAlert(message: "Ooops, seem that you didn't verify")
+                    do {
+                        try FIRAuth.auth()?.signOut()
+                        AppState.sharedInstance.signedIn = false
+                    } catch let signOutError as NSError {
+                        print ("Error signing out: \(signOutError.localizedDescription)")
+                    }
+                    
+                }
+                
+            }
+            prompt.addAction(okAction)
+            self.present(prompt, animated: true, completion: nil);
+            
+            
+
         }
     }
     
+    func sendEmailVerification(withCompletionCallback callback: @escaping FIRSendEmailVerificationCallback){
+        FIRAuth.auth()?.currentUser?.sendEmailVerification(completion: callback)
+    }
+        
     func configureDatabase() {
         ref = FIRDatabase.database().reference()
     }
