@@ -26,9 +26,9 @@ class SignInViewController: UIViewController {
     var uid: String = ""
     
     override func viewDidAppear(_ animated: Bool) {
-        if let user = FIRAuth.auth()?.currentUser {
-            self.signedIn(user)
-        }
+//        if let user = FIRAuth.auth()?.currentUser {
+//            self.signedIn(user)
+//        }
         self.hideKeyboardWhenTappedAround()
     }
     
@@ -61,7 +61,7 @@ class SignInViewController: UIViewController {
     
     func isValidEmail(testStr:String) -> Bool {
         // print("validate calendar: \(testStr)")
-       // let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        // let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         let emailRegEx = "[A-Z0-9a-z._%+-]+@umich.edu"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -100,18 +100,18 @@ class SignInViewController: UIViewController {
             let prompt = UIAlertController.init(title: nil, message: "We just sent a verification to your email address! Go and verify it!", preferredStyle: .alert)
             let okAction = UIAlertAction.init(title: "I have verified", style: .default) { (action) in
                 print (FIRAuth.auth()?.currentUser?.isEmailVerified)
-
-                    self.setDisplayName(user!)
-                    
-                    //create initial profile
-                    self.uid = user!.uid
-                    self.configureDatabase()
-                    self.configureStorage()
-                    var data = [Constants.CommonProfileFields.userId: user!.uid]
-                    data[Constants.CommonProfileFields.saved] = "FALSE"
-                    data[Constants.CommonProfileFields.myPostsList] = ""
-                    data[Constants.CommonProfileFields.myRequestsList] = ""
-                    self.sendMessage(withData: data)
+                
+                self.setDisplayName(user!)
+                
+                //create initial profile
+                self.uid = user!.uid
+                self.configureDatabase()
+                self.configureStorage()
+                var data = [Constants.CommonProfileFields.userId: user!.uid]
+                data[Constants.CommonProfileFields.saved] = "FALSE"
+                data[Constants.CommonProfileFields.myPostsList] = ""
+                data[Constants.CommonProfileFields.myRequestsList] = ""
+                self.sendMessage(withData: data)
                 if (FIRAuth.auth()?.currentUser?.isEmailVerified)! {
                     // verified
                 } else {
@@ -130,14 +130,14 @@ class SignInViewController: UIViewController {
             self.present(prompt, animated: true, completion: nil);
             
             
-
+            
         }
     }
     
     func sendEmailVerification(withCompletionCallback callback: @escaping FIRSendEmailVerificationCallback){
         FIRAuth.auth()?.currentUser?.sendEmailVerification(completion: callback)
     }
-        
+    
     func configureDatabase() {
         ref = FIRDatabase.database().reference()
     }
@@ -202,4 +202,3 @@ class SignInViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 }
-

@@ -11,7 +11,7 @@ import UIKit
 
 import Firebase
 
-class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet weak var firstnameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var genderTextField: UITextField!
@@ -194,6 +194,61 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         }
         
     }
+    
+    @IBAction func didTapEditProfilePhoto(_ sender: Any) {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
+            picker.sourceType = UIImagePickerControllerSourceType.camera
+        } else {
+            picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        }
+        
+        present(picker, animated: true, completion:nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.dismiss(animated: true, completion:nil)
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else { return }
+        
+        // if it's a photo from the library, not an image from the camera
+        if #available(iOS 8.0, *), let referenceURL = info[UIImagePickerControllerReferenceURL] {
+            let assets = PHAsset.fetchAssets(withALAssetURLs: [referenceURL as! URL], options: nil)
+            let asset = assets.firstObject
+            asset?.requestContentEditingInput(with: nil, completionHandler: { [weak self] (contentEditingInput, info) in
+                let imageFile = contentEditingInput?.fullSizeImageURL
+                let filePath = "\(uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000))/\((referenceURL as AnyObject).lastPathComponent!)"
+                guard let strongSelf = self else { return }
+                strongSelf.storageRef.child(filePath)
+                    .putFile(imageFile!, metadata: nil) { (metadata, error) in
+                        if let error = error {
+                            let nsError = error as NSError
+                            print("Error uploading: \(nsError.localizedDescription)")
+                            return
+                        }
+                        strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
+                }
+            })
+        } else {
+            guard let image = info[UIImagePickerControllerOriginalImage] as! UIImage? else { return }
+            let imageData = UIImageJPEGRepresentation(image, 0.8)
+            let imagePath = "\(uid)/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
+            let metadata = FIRStorageMetadata()
+            metadata.contentType = "image/jpeg"
+            self.storageRef.child(imagePath)
+                .put(imageData!, metadata: metadata) { [weak self] (metadata, error) in
+                    if let error = error {
+                        print("Error uploading: \(error)")
+                        return
+                    }
+                    guard let strongSelf = self else { return }
+                    strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
+            }
+        }
+    }
+    
+    
     
     func sendMessage(withData data: [String: String]) {
         var mdata = data
