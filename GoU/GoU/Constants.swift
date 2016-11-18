@@ -39,6 +39,8 @@ struct Constants {
         static let isDriver = "isDriver"
         static let myPostsList =  "myPostsList"
         static let myRequestsList = "myRequestsList"
+        static let hasProfilePhoto = "hasProfilePhoto"
+        static let profilePhotoURL = "profilePhotoURL"
     }
     
     struct MessageFields {

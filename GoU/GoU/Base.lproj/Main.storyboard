@@ -28,8 +28,12 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wCs-eS-Nj3">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
                                         <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AYQ-cR-0J5">
+                                                <rect key="frame" x="220" y="23" width="100" height="100"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EBt-dU-CMU">
-                                                <rect key="frame" x="303" y="86" width="24" height="24"/>
+                                                <rect key="frame" x="307" y="112" width="24" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="24" id="P07-x4-703"/>
                                                 </constraints>
@@ -143,18 +147,6 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HaY-8W-02V">
-                                                <rect key="frame" x="82" y="41" width="194" height="21"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <attributedString key="attributedText">
-                                                    <fragment content="User">
-                                                        <attributes>
-                                                            <font key="NSFont" metaFont="system" size="24"/>
-                                                        </attributes>
-                                                    </fragment>
-                                                </attributedString>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Major" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T5l-5g-L8A">
                                                 <rect key="frame" x="44" y="545" width="43" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -205,7 +197,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oB3-FZ-sCo">
-                                                <rect key="frame" x="44" y="70" width="80" height="30"/>
+                                                <rect key="frame" x="44" y="87" width="80" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -214,15 +206,23 @@
                                                     <action selector="didTapSignOut:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="u9O-90-JrU"/>
                                                 </connections>
                                             </button>
-                                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" image="GOUlogo1x" translatesAutoresizingMaskIntoConstraints="NO" id="YJR-eQ-mVQ">
-                                                <rect key="frame" x="223" y="41" width="110" height="50"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HaY-8W-02V">
+                                                <rect key="frame" x="82" y="37" width="194" height="29"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <attributedString key="attributedText">
+                                                    <fragment content="User">
+                                                        <attributes>
+                                                            <font key="NSFont" metaFont="system" size="24"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="EBt-dU-CMU" firstAttribute="top" secondItem="wCs-eS-Nj3" secondAttribute="top" constant="86" id="8la-md-xXW"/>
-                                            <constraint firstAttribute="trailing" secondItem="EBt-dU-CMU" secondAttribute="trailing" constant="48" id="ENn-pS-jtB"/>
+                                            <constraint firstItem="EBt-dU-CMU" firstAttribute="top" secondItem="wCs-eS-Nj3" secondAttribute="top" constant="112" id="8la-md-xXW"/>
+                                            <constraint firstAttribute="trailing" secondItem="EBt-dU-CMU" secondAttribute="trailing" constant="44" id="ENn-pS-jtB"/>
                                             <constraint firstAttribute="height" constant="1000" id="Hzk-tz-jmC"/>
                                         </constraints>
                                     </view>
@@ -266,6 +266,8 @@
                         <outlet property="lastNameTextField" destination="hCe-Ra-NSw" id="ma4-lj-4Ak"/>
                         <outlet property="majorTextField" destination="sRb-Ke-cju" id="TPS-7y-SFP"/>
                         <outlet property="phoneTextField" destination="iiT-uz-Qq2" id="mPE-Od-nJz"/>
+                        <outlet property="profilePhoto" destination="AYQ-cR-0J5" id="Xds-sD-nAb"/>
+                        <outlet property="profilePhotoButton" destination="EBt-dU-CMU" id="39i-Ro-gL1"/>
                         <outlet property="scrollView" destination="3IL-H3-5Gb" id="Yjy-UN-IlB"/>
                         <outlet property="usernameLabel" destination="HaY-8W-02V" id="Zv3-Y3-oLe"/>
                     </connections>

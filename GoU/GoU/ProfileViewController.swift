@@ -28,6 +28,8 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var genderPicker: UIPickerView!
+    @IBOutlet weak var profilePhoto: UIImageView!
+    @IBOutlet weak var profilePhotoButton: UIButton!
     // MARK: Properties
     var ref: FIRDatabaseReference!
     var messages: [FIRDataSnapshot]! = []
@@ -67,6 +69,7 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         usernameLabel.text = name
         emailTextField.text = email
         
+        profilePhotoButton.window?.windowLevel = CGFloat.greatestFiniteMagnitude
         ref.child("commonProfiles").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             // Get user value
             let value = snapshot.value as? NSDictionary
@@ -89,6 +92,8 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         }) { (error) in
             print(error.localizedDescription)
         }
+        
+        updateProfilePhotoView()
         
         //picker
         var genderPickerView = UIPickerView()
@@ -138,6 +143,8 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     
     func logViewLoaded() {
     }
+    
+
     
     
     @IBAction func didTapSave(_ sender: AnyObject) {
@@ -227,7 +234,10 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                             print("Error uploading: \(nsError.localizedDescription)")
                             return
                         }
-                        strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
+                        var data = [Constants.CommonProfileFields.userId: self?.uid]
+                        data[Constants.CommonProfileFields.hasProfilePhoto] = "TRUE"
+                        data[Constants.CommonProfileFields.profilePhotoURL] = strongSelf.storageRef.child((metadata?.path)!).description
+                        strongSelf.updateProfilePhoto(withData: data as! [String : String])
                 }
             })
         } else {
@@ -243,7 +253,10 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                         return
                     }
                     guard let strongSelf = self else { return }
-                    strongSelf.sendMessage(withData: [Constants.MessageFields.imageURL: strongSelf.storageRef.child((metadata?.path)!).description])
+                    var data = [Constants.CommonProfileFields.userId: self?.uid]
+                    data[Constants.CommonProfileFields.hasProfilePhoto] = "TRUE"
+                    data[Constants.CommonProfileFields.profilePhotoURL] = strongSelf.storageRef.child((metadata?.path)!).description
+                    strongSelf.updateProfilePhoto(withData: data as! [String : String])
             }
         }
     }
@@ -254,6 +267,43 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         var mdata = data
         // Push data to Firebase Database
         self.ref.child("commonProfiles").child(uid).setValue(mdata)
+    }
+    
+    func updateProfilePhoto(withData data: [String: String]) {
+        var mdata = data
+        // Push data to Firebase Database
+        self.ref.child("commonProfiles").child("profilePhoto").child(uid).setValue(mdata)
+        updateProfilePhotoView()
+    }
+    
+    func updateProfilePhotoView() {
+        ref.child("commonProfiles").child("profilePhoto").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            // Get user value
+            let value = snapshot.value as? NSDictionary
+            let hasProfilePhoto = value?["hasProfilePhoto"] as! String
+            if (hasProfilePhoto == "TRUE") {
+                let imageURL = value?[Constants.CommonProfileFields.profilePhotoURL]
+                //if let imageURL = value?[Constants.CommonProfileFields.profilePhotoURL] {
+                if (imageURL as AnyObject).hasPrefix("gs://") {
+                    FIRStorage.storage().reference(forURL: imageURL as! String).data(withMaxSize: INT64_MAX){ (data, error) in
+                        if let error = error {
+                            print("Error downloading: \(error)")
+                            return
+                        }
+                        self.profilePhoto?.image = UIImage.init(data: data!)
+                    }
+                } else if let URL = URL(string: imageURL as! String), let data = try? Data(contentsOf: URL) {
+                    self.profilePhoto?.image = UIImage.init(data: data)
+                }
+            }
+            else {
+                self.profilePhoto?.image = UIImage(named: "ic_account_circle")
+            }
+            
+            // }
+        }) { (error) in
+            print(error.localizedDescription)
+        }
     }
     
     func showAlert() {

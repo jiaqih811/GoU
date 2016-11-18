@@ -112,6 +112,11 @@ class SignInViewController: UIViewController {
                 data[Constants.CommonProfileFields.myPostsList] = ""
                 data[Constants.CommonProfileFields.myRequestsList] = ""
                 self.sendMessage(withData: data)
+                
+                var dataPhoto = [Constants.CommonProfileFields.userId: user!.uid]
+                data[Constants.CommonProfileFields.hasProfilePhoto] = "FALSE"
+                self.updateProfilePhoto(withData: dataPhoto)
+                
                 if (FIRAuth.auth()?.currentUser?.isEmailVerified)! {
                     // verified
                 } else {
@@ -150,6 +155,12 @@ class SignInViewController: UIViewController {
         var mdata = data
         // Push data to Firebase Database
         self.ref.child("commonProfiles").child(uid).setValue(mdata)
+    }
+    
+    func updateProfilePhoto(withData data: [String: String]) {
+        var mdata = data
+        // Push data to Firebase Database
+        self.ref.child("commonProfiles").child("profilePhoto").child(uid).setValue(mdata)
     }
     
     func setDisplayName(_ user: FIRUser) {
