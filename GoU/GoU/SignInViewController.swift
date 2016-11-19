@@ -114,7 +114,7 @@ class SignInViewController: UIViewController {
                 self.sendMessage(withData: data)
                 
                 var dataPhoto = [Constants.CommonProfileFields.userId: user!.uid]
-                data[Constants.CommonProfileFields.hasProfilePhoto] = "FALSE"
+                dataPhoto[Constants.CommonProfileFields.hasProfilePhoto] = "FALSE"
                 self.updateProfilePhoto(withData: dataPhoto)
                 
                 if (FIRAuth.auth()?.currentUser?.isEmailVerified)! {
