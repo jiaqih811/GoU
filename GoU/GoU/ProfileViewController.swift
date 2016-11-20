@@ -28,8 +28,15 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var genderPicker: UIPickerView!
+    
     @IBOutlet weak var profilePhoto: UIImageView!
     @IBOutlet weak var profilePhotoButton: UIButton!
+    
+    @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var vehicleInfoView: UIView!
+    @IBOutlet weak var isDriverSwitch: UISwitch!
+    @IBOutlet weak var vehicleModelTextField: UITextField!
+    @IBOutlet weak var vehicleYearTextField: UITextField!
     // MARK: Properties
     var ref: FIRDatabaseReference!
     var messages: [FIRDataSnapshot]! = []
@@ -41,6 +48,8 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     var uid: String = ""
     
     var genderOptions = ["Female", "Male", "Other"]
+    
+    var isDriver = "FALSE"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,6 +78,8 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         usernameLabel.text = name
         emailTextField.text = email
         
+        self.setVehicleView(isHide: "TRUE")
+        
         profilePhotoButton.window?.windowLevel = CGFloat.greatestFiniteMagnitude
         ref.child("commonProfiles").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             // Get user value
@@ -86,6 +97,16 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                 self.majorTextField.text = value?["majorField"] as! String
                 self.aboutMeTextField.text = value?["aboutMe"] as! String
                 let phoneNumber = value?["phoneNumber"] as! String
+                
+                self.isDriver = value?["isDriver"] as! String
+                if (self.isDriver == "TRUE") {
+                    self.isDriverSwitch.setOn(true, animated: true)
+                    self.setVehicleView(isHide: "False")
+                } else {
+                    self.isDriverSwitch.setOn(false, animated: true)
+                    self.setVehicleView(isHide: "TRUE")
+                }
+                
                 print("&&&&&&&&")
                 print(phoneNumber)
             }
@@ -184,7 +205,7 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                 data[Constants.CommonProfileFields.saved] = "TRUE"
                 data[Constants.CommonProfileFields.myPostsList] = postList
                 data[Constants.CommonProfileFields.myRequestsList] = requestList
-                data[Constants.CommonProfileFields.isDriver] = "FALSE"//TODO: JUST FOR NOW
+                data[Constants.CommonProfileFields.isDriver] = self.isDriver
                 
                 self.sendMessage(withData: data)
             }) { (error) in
@@ -333,10 +354,29 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
         genderTextField.text = genderOptions[row]
     }
     
-//    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-//        genderPicker.isHidden = false
-//        return false
-//    }
+    //MARK: Vehicle info
+    @IBAction func didTapIsDriverSwitch(_ sender: Any) {
+        if (self.isDriver == "TRUE") {
+            self.isDriver = "FALSE"
+            self.isDriverSwitch.setOn(false, animated: true)
+            self.setVehicleView(isHide: "TRUE")
+        } else {
+            self.isDriver = "TRUE"
+            self.isDriverSwitch.setOn(true, animated: true)
+            self.setVehicleView(isHide: "FALSE")
+        }
+    }
+    
+    func setVehicleView (isHide: String) {
+        if (isHide == "TRUE") {
+            self.vehicleInfoView.isHidden = true
+            self.saveButton.frame = CGRect.init(x: 190.0, y: 700.0, width: 160.0, height: 40.0)
+        } else {
+            self.vehicleInfoView.isHidden = false
+            self.saveButton.frame = CGRect.init(x: 190.0, y: 900.0, width: 160.0, height: 40.0)
+        }
+    }
+    
     
     
 }
