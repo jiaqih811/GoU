@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoU/GoU/TripViewController.swift"
-            timestampString = "500328686.016173"
+            timestampString = "502263223.560642"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
             landmarkName = "submitTrip(_:)"
             landmarkType = "7">
          </BreakpointContent>

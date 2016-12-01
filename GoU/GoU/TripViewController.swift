@@ -19,7 +19,9 @@ class TripViewController: UIViewController {
     @IBOutlet weak var pickTextField: UITextField!
     @IBOutlet weak var priceTextField: UITextField!
     
+    @IBOutlet weak var negotiateLabel: UILabel!
     
+    @IBOutlet weak var ifPickup: UISwitch!
     @IBOutlet weak var scrollView: UIScrollView!
     
     
@@ -33,6 +35,7 @@ class TripViewController: UIViewController {
     var storageRef: FIRStorageReference!
     var remoteConfig: FIRRemoteConfig!
     
+    var ifPickUpFlag: Bool!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +48,9 @@ class TripViewController: UIViewController {
         self.ref = FIRDatabase.database().reference(withPath: "messages")
         // Do any additional setup after loading the view, typically from a nib.
         
-        
+        self.ifPickup.setOn(false, animated: true)
+        ifPickUpFlag = false
+        self.pickTextField.isHidden = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -56,12 +61,30 @@ class TripViewController: UIViewController {
     }
     
     
+    @IBAction func tapIfPickUp(_ sender: AnyObject) {
+        if (ifPickUpFlag == true){
+            ifPickUpFlag = false
+            self.ifPickup.setOn(false, animated: true)
+            self.pickTextField.isHidden = true
+            self.negotiateLabel.isHidden = false
+            self.pickTextField.text = ""
+        } else{
+            ifPickUpFlag = true
+            self.ifPickup.setOn(true, animated: true)
+            self.pickTextField.isHidden = false
+            self.negotiateLabel.isHidden = true
+            self.pickTextField.text = ""
+        }
+    }
     
     
     @IBAction func submitTrip(_ sender: UIButton) {
         let userID = (FIRAuth.auth()?.currentUser?.uid)! as String
         
-    
+        if(!pickTextField.isHidden && self.pickTextField.text == "")
+        {
+            showAlert()
+        }
         
         if ((fromTextField.text?.isEmpty)! || (toTextField.text?.isEmpty)! ||
             (dateTextField.text?.isEmpty)! || (seatsTextField.text?.isEmpty)! ||
@@ -69,9 +92,12 @@ class TripViewController: UIViewController {
         {
             showAlert()
         }
-            
         else
         {
+            if (pickTextField.isHidden)
+            {
+                pickTextField.text = "Negotiate with rider"
+            }
             let postKey = ref.child("posts").childByAutoId().key as String
             self.ref.child("posts").child(postKey).setValue(["from": fromTextField.text!,
                                                              "to": toTextField.text!,
