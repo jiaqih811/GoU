@@ -26,9 +26,9 @@ class SignInViewController: UIViewController {
     var uid: String = ""
     
     override func viewDidAppear(_ animated: Bool) {
-//        if let user = FIRAuth.auth()?.currentUser {
-//            self.signedIn(user)
-//        }
+        if let user = FIRAuth.auth()?.currentUser {
+            self.signedIn(user)
+        }
         self.hideKeyboardWhenTappedAround()
     }
     

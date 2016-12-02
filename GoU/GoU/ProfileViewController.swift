@@ -21,10 +21,9 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     @IBOutlet weak var currentStateTextField: UITextField!
     @IBOutlet weak var currentCityTextField: UITextField!
     @IBOutlet weak var majorTextField: UITextField!
-    @IBOutlet weak var languageFirstTextField: UITextField!
     
-    @IBOutlet weak var aboutMeTextField: UITextView!
-    @IBOutlet weak var languageSecondTextField: UITextField!
+    
+    @IBOutlet weak var aboutMeTextField: UITextField!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var genderPicker: UIPickerView!
@@ -62,9 +61,6 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
 
         configureDatabase()
         configureStorage()
-        configureRemoteConfig()
-        fetchConfig()
-        logViewLoaded()
         var name = ""
         var email = ""
         if let user = FIRAuth.auth()?.currentUser {
@@ -86,12 +82,12 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
             let value = snapshot.value as? NSDictionary
             let saved = value?["saved"] as! String
             if (saved == "TRUE") {
-                self.firstnameTextField.text = value?["firstName"] as! String
-                self.lastNameTextField.text = value?["lastName"] as! String
-                self.genderTextField.text = value?["gender"] as! String
-                self.emailTextField.text = value?["emailAddress"] as! String
-                self.phoneTextField.text = value?["phoneNumber"] as! String
-                self.currentCountryTextField.text = value?["currentCountryName"] as! String
+                self.firstnameTextField.text = value?["firstName"] as? String
+                self.lastNameTextField.text = value?["lastName"] as? String
+                self.genderTextField.text = value?["gender"] as? String
+                self.emailTextField.text = value?["emailAddress"] as? String
+                self.phoneTextField.text = value?["phoneNumber"] as? String
+                self.currentCountryTextField.text = value?["currentCountryName"] as? String
                 self.currentStateTextField.text = value?["currentStateName"] as! String
                 self.currentCityTextField.text = value?["currentCityName"] as! String
                 self.majorTextField.text = value?["majorField"] as! String
@@ -102,13 +98,13 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                 if (self.isDriver == "TRUE") {
                     self.isDriverSwitch.setOn(true, animated: true)
                     self.setVehicleView(isHide: "False")
+                    self.vehicleModelTextField.text = value?["vehicleModel"] as? String
+                    self.vehicleYearTextField.text = value?["vehicleYear"] as? String
                 } else {
                     self.isDriverSwitch.setOn(false, animated: true)
                     self.setVehicleView(isHide: "TRUE")
                 }
                 
-                print("&&&&&&&&")
-                print(phoneNumber)
             }
         }) { (error) in
             print(error.localizedDescription)
@@ -142,31 +138,11 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     
     func configureDatabase() {
         ref = FIRDatabase.database().reference()
-        //TODO: fetch user profile to local variable if already has profile
-        // Listen for new messages in the Firebase database
-        //        _refHandle = self.ref.child("messages").observe(.childAdded, with: { [weak self] (snapshot) -> Void in
-        //            guard let strongSelf = self else { return }
-        //            strongSelf.messages.append(snapshot)
-        //            strongSelf.clientTable.insertRows(at: [IndexPath(row: strongSelf.messages.count-1, section: 0)], with: .automatic)
-        //            })
-        
     }
     
     func configureStorage() {
         storageRef = FIRStorage.storage().reference(forURL: "gs://gou-app-94faa.appspot.com")
     }
-    
-    func configureRemoteConfig() {
-    }
-    
-    func fetchConfig() {
-    }
-    
-    func logViewLoaded() {
-    }
-    
-
-    
     
     @IBAction func didTapSave(_ sender: AnyObject) {
         if (firstnameTextField.text! == "" || lastNameTextField.text! == "" ||
@@ -207,6 +183,10 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
                 data[Constants.CommonProfileFields.myRequestsList] = requestList
                 data[Constants.CommonProfileFields.isDriver] = self.isDriver
                 
+                if (self.isDriver == "TRUE") {
+                    data[Constants.DriverProfileFields.vehicleModel] = self.vehicleModelTextField.text!
+                    data[Constants.DriverProfileFields.vehicleYear] = self.vehicleYearTextField.text!
+                }
                 self.sendMessage(withData: data)
             }) { (error) in
                 print(error.localizedDescription)
@@ -370,7 +350,7 @@ class ProfileViewController: UIViewController, UIPickerViewDataSource, UIPickerV
     func setVehicleView (isHide: String) {
         if (isHide == "TRUE") {
             self.vehicleInfoView.isHidden = true
-            self.saveButton.frame = CGRect.init(x: 190.0, y: 700.0, width: 160.0, height: 40.0)
+            self.saveButton.frame = CGRect.init(x: 190.0, y: 750.0, width: 160.0, height: 40.0)
         } else {
             self.vehicleInfoView.isHidden = false
             self.saveButton.frame = CGRect.init(x: 190.0, y: 900.0, width: 160.0, height: 40.0)
