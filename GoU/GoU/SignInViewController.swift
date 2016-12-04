@@ -121,20 +121,20 @@ class SignInViewController: UIViewController {
                 dataPhoto[Constants.CommonProfileFields.hasProfilePhoto] = "FALSE"
                 self.updateProfilePhoto(withData: dataPhoto)
                 
-                if (FIRAuth.auth()?.currentUser?.isEmailVerified)! {
-                    // verified
-                } else {
-                    self.showAlert(message: "Ooops, seem that you didn't verify")
-                    do {
-                        try FIRAuth.auth()?.signOut()
-                        AppState.sharedInstance.signedIn = false
-                    } catch let signOutError as NSError {
-                        print ("Error signing out: \(signOutError.localizedDescription)")
-                    }
-                    
+//                if (FIRAuth.auth()?.currentUser?.isEmailVerified)! {
+//                    // verified
+//                } else {
+//                    self.showAlert(message: "Ooops, seem that you didn't verify")
+//                    do {
+//                        try FIRAuth.auth()?.signOut()
+//                        AppState.sharedInstance.signedIn = false
+//                    } catch let signOutError as NSError {
+//                        print ("Error signing out: \(signOutError.localizedDescription)")
+//                    }
+//                    
 //                }
 //                
-            }
+//            }
 //            prompt.addAction(okAction)
 //            self.present(prompt, animated: true, completion: nil);
             
