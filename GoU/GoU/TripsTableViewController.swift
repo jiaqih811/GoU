@@ -17,6 +17,9 @@ class TripsTableViewController: UITableViewController {
     var ref: FIRDatabaseReference!
     var userRef: FIRDatabaseReference!
     var trips = [Trip]()
+    var filteredTrips = [Trip]()
+    
+    let searchController = UISearchController(searchResultsController: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,8 +61,6 @@ class TripsTableViewController: UITableViewController {
             self.tableView.dataSource = self
             self.tableView.reloadData()
 
-                
-            
             
         }) { (error) in
             print(error.localizedDescription)
@@ -72,6 +73,15 @@ class TripsTableViewController: UITableViewController {
         
         
         
+    }
+    
+    func filterContentForSearchText(searchText: String, scope: String = "All") {
+        filteredTrips = trips.filter { Trip in
+            return Trip.from.lowercased().contains(searchText.lowercased())
+            
+        }
+        
+        tableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -103,6 +113,10 @@ class TripsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        if (tableView == self.searchDisplayController?.searchResultsTableView)
+        {
+            return self.filteredTrips.count
+        }
         return self.trips.count
     }
     
@@ -114,6 +128,11 @@ class TripsTableViewController: UITableViewController {
         
         cell.textLabel?.text = "\(self.trips[indexPath.row].from) - \(self.trips[indexPath.row].to) - \(self.trips[indexPath.row].date)"
         
+        if (tableView == self.searchDisplayController?.searchResultsTableView)
+        {
+            cell.textLabel?.text = "\(self.filteredTrips[indexPath.row].from) - \(self.filteredTrips[indexPath.row].to) - \(self.filteredTrips[indexPath.row].date)"
+        }
+        
         return cell
     }
     
@@ -121,6 +140,29 @@ class TripsTableViewController: UITableViewController {
         
     }
     
+    func filterContentForToSearchText(searchText: String, scope: String = "Title")
+    {
+        self.filteredTrips = self.trips.filter({(trip:Trip) -> Bool in
+            let categoryMatch = (scope == "Title")
+            let stringMatch = trip.from.range(of: searchText)
+            return categoryMatch && (stringMatch != nil)
+        })
+    }
+    
+    func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchString searchString:String!)->Bool
+    {
+        self.filterContentForSearchText(searchText: searchString, scope: "Title")
+        return true
+        
+    }
+    
+    func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchScope searchOption:Int!)->Bool
+    {
+        self.filterContentForSearchText(searchText: (self.searchDisplayController?.searchBar.text)!, scope: "Title")
+        
+        return true
+    }
+
     
     @IBAction func refresh(_ sender: AnyObject) {
         

@@ -84,7 +84,8 @@ class MyTripsViewController: UIViewController, UITableViewDataSource,UITableView
         
         
         
-        //tabBarController?.tabBar.items?[2].badgeValue = "2"
+        
+        tabBarController?.tabBar.items?[2].badgeValue = "2"
 
     }
     
