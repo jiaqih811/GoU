@@ -47,15 +47,16 @@ class SignInViewController: UIViewController {
                 return
             }
             self.signedIn(user!)
-            if (!(FIRAuth.auth()?.currentUser?.isEmailVerified)!) {
-                self.showAlert(message: "Verify your email first!")
-                do {
-                    try FIRAuth.auth()?.signOut()
-                    AppState.sharedInstance.signedIn = false
-                } catch let signOutError as NSError {
-                    print ("Error signing out: \(signOutError.localizedDescription)")
-                }
-            }
+            // no email verification in this release
+//            if (!(FIRAuth.auth()?.currentUser?.isEmailVerified)!) {
+//                self.showAlert(message: "Verify your email first!")
+//                do {
+//                    try FIRAuth.auth()?.signOut()
+//                    AppState.sharedInstance.signedIn = false
+//                } catch let signOutError as NSError {
+//                    print ("Error signing out: \(signOutError.localizedDescription)")
+//                }
+//            }
         }
     }
     
@@ -71,11 +72,12 @@ class SignInViewController: UIViewController {
     @IBAction func didTapSignUp(_ sender: AnyObject) {
         guard let email = emailField.text, let password = passwordField.text else { return }
         
+        // don't limit to umich students in this release
         // check the email ends with umich.edu
-        if(!isValidEmail(testStr: emailField.text!)) {
-            self.showAlert(message: "Please use your umich email address")
-            return
-        }
+//        if(!isValidEmail(testStr: emailField.text!)) {
+//            self.showAlert(message: "Please use your umich email address")
+//            return
+//        }
         
         
         FIRAuth.auth()?.createUser(withEmail: email, password: password) { (user, error) in
@@ -85,22 +87,24 @@ class SignInViewController: UIViewController {
                 return
             }
             
-            //send email verification
-            self.sendEmailVerification(withCompletionCallback: { (error) in
-                if error != nil{
-                    print(error!)
-                }
-                else{
-                    //verification email sent
-                    self.showAlert(message: "We just sent a verification to your email address! Go and verify it!")
-                }
-            })
             
+            // no email verification in this release
+//            //send email verification
+//            self.sendEmailVerification(withCompletionCallback: { (error) in
+//                if error != nil{
+//                    print(error!)
+//                }
+//                else{
+//                    //verification email sent
+//                    self.showAlert(message: "We just sent a verification to your email address! Go and verify it!")
+//                }
+//            })
+//            
+//            
+//            let prompt = UIAlertController.init(title: nil, message: "We just sent a verification to your email address! Go and verify it!", preferredStyle: .alert)
+//            let okAction = UIAlertAction.init(title: "I have verified", style: .default) { (action) in
+//                print (FIRAuth.auth()?.currentUser?.isEmailVerified)
             
-            let prompt = UIAlertController.init(title: nil, message: "We just sent a verification to your email address! Go and verify it!", preferredStyle: .alert)
-            let okAction = UIAlertAction.init(title: "I have verified", style: .default) { (action) in
-                print (FIRAuth.auth()?.currentUser?.isEmailVerified)
-                
                 self.setDisplayName(user!)
                 
                 //create initial profile
@@ -128,11 +132,11 @@ class SignInViewController: UIViewController {
                         print ("Error signing out: \(signOutError.localizedDescription)")
                     }
                     
-                }
-                
+//                }
+//                
             }
-            prompt.addAction(okAction)
-            self.present(prompt, animated: true, completion: nil);
+//            prompt.addAction(okAction)
+//            self.present(prompt, animated: true, completion: nil);
             
             
             
