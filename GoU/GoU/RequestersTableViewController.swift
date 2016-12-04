@@ -35,29 +35,32 @@ class RequestersTableViewController: UITableViewController {
             debugPrint("hello")
             
             for currUser in userKeys{
-                var requester = DriverViewProfile()
-                let firstName = (value![currUser]! as! NSDictionary)["firstName"]! as! String
-                let lastName = (value![currUser]! as! NSDictionary)["lastName"]! as! String
-                requester.gender = (value![currUser]! as! NSDictionary)["gender"]! as! String
-                let city = (value![currUser]! as! NSDictionary)["currentCityName"]! as! String
-                let state = (value![currUser]! as! NSDictionary)["currentStateName"]! as! String
-                let country = (value![currUser]! as! NSDictionary)["currentCountryName"]! as! String
-                requester.email = (value![currUser]! as! NSDictionary)["emailAddress"]! as! String
-                requester.phone = (value![currUser]! as! NSDictionary)["phoneNumber"]! as! String
-                requester.aboutme = (value![currUser]! as! NSDictionary)["aboutMe"]! as! String
-                requester.userID = (value![currUser]! as! NSDictionary)["userId"]! as! String
-                self.tripRequests = (value![currUser]! as! NSDictionary)["myRequestsList"]! as! String
-                
-                
-                requester.name = firstName + " " + lastName
-                requester.loc = city + ", " + state + ", " + country
-                
-                let requestsArr = self.tripRequests.components(separatedBy: ",")
-                
-                // TODO: DO linear search?
-                
-                if (requestsArr.contains(self.trip.tripID)) {
-                    self.requesters.append(requester)
+                let saved = (value![currUser]! as! NSDictionary)["saved"]! as! String
+                if (saved == "TRUE") {
+                    var requester = DriverViewProfile()
+                    let firstName = (value![currUser]! as! NSDictionary)["firstName"]! as! String
+                    let lastName = (value![currUser]! as! NSDictionary)["lastName"]! as! String
+                    requester.gender = (value![currUser]! as! NSDictionary)["gender"]! as! String
+                    let city = (value![currUser]! as! NSDictionary)["currentCityName"]! as! String
+                    let state = (value![currUser]! as! NSDictionary)["currentStateName"]! as! String
+                    let country = (value![currUser]! as! NSDictionary)["currentCountryName"]! as! String
+                    requester.email = (value![currUser]! as! NSDictionary)["emailAddress"]! as! String
+                    requester.phone = (value![currUser]! as! NSDictionary)["phoneNumber"]! as! String
+                    requester.aboutme = (value![currUser]! as! NSDictionary)["aboutMe"]! as! String
+                    requester.userID = (value![currUser]! as! NSDictionary)["userId"]! as! String
+                    self.tripRequests = (value![currUser]! as! NSDictionary)["myRequestsList"]! as! String
+                    
+                    
+                    requester.name = firstName + " " + lastName
+                    requester.loc = city + ", " + state + ", " + country
+                    
+                    let requestsArr = self.tripRequests.components(separatedBy: ",")
+                    
+                    // TODO: DO linear search?
+                    
+                    if (requestsArr.contains(self.trip.tripID)) {
+                        self.requesters.append(requester)
+                    }
                 }
                 
                 
