@@ -96,12 +96,12 @@ class SignInViewController: UIViewController {
 //                }
 //                else{
 //                    //verification email sent
-//                    self.showAlert(message: "We just sent a verification to your email address! Go and verify it!")
+//                    self.showAlert(message: "We just sent a verification email to you. Please go and verify!")
 //                }
 //            })
 //            
 //            
-//            let prompt = UIAlertController.init(title: nil, message: "We just sent a verification to your email address! Go and verify it!", preferredStyle: .alert)
+//            let prompt = UIAlertController.init(title: nil, message: "We just sent a verification email to you. Please go and verify!", preferredStyle: .alert)
 //            let okAction = UIAlertAction.init(title: "I have verified", style: .default) { (action) in
 //                print (FIRAuth.auth()?.currentUser?.isEmailVerified)
             
